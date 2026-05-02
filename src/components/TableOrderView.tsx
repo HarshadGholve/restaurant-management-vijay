@@ -396,7 +396,7 @@ export default function TableOrderView({ tableId, onNavigate }: TableOrderViewPr
 
       {/* Floating Cart Button */}
       {!isBilled && activeTab === 'order' && (table.items || []).length > 0 && (
-        <div className="absolute bottom-6 left-5 right-5 z-40">
+        <div className="absolute bottom-6 left-5 right-5 z-[60]">
           <button
             onClick={() => setActiveTab('cart')}
             className="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-xl shadow-slate-900/20 flex items-center justify-between px-5 hover:-translate-y-1 transition-transform"

@@ -65,7 +65,7 @@ function AppContent() {
       <div className="absolute inset-0 shadow-[0_0_40px_rgba(131,201,244,0.15)] rounded-none sm:rounded-[2.5rem] pointer-events-none z-50 border-0 sm:border-8 border-white/50" />
 
       {/* Content */}
-      <div className="flex-1 overflow-x-hidden bg-[#f8fafc]">
+      <div className="flex-1 relative flex flex-col overflow-hidden bg-[#f8fafc]">
         {renderPage()}
       </div>
 
