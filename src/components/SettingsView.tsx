@@ -7,6 +7,7 @@ export default function SettingsView() {
   const { totalTables, setTotalTables, tables, history, getTableTotal } = useOrders();
   const [inputTables, setInputTables] = useState(totalTables.toString());
 
+  // Using UTC-based reset (resets around 5:30 AM local time)
   const today = new Date().toISOString().split('T')[0];
   
   const currentBilledRevenue = tables
@@ -18,8 +19,20 @@ export default function SettingsView() {
 
   const archivedRevenue = todayHistory
     .reduce((sum, order) => sum + (order.total || 0), 0);
-
+  
   const totalRevenue = currentBilledRevenue + archivedRevenue;
+
+  // Group history by date for the summary list
+  const historyByDate = (history || []).reduce((acc, order) => {
+    const date = new Date(order.archivedAt).toISOString().split('T')[0];
+    acc[date] = (acc[date] || 0) + (order.total || 0);
+    return acc;
+  }, {} as Record<string, number>);
+
+  const last7Days = Object.keys(historyByDate)
+    .sort()
+    .reverse()
+    .slice(0, 7);
 
   const handleSaveTables = () => {
     const n = parseInt(inputTables);
@@ -111,7 +124,7 @@ export default function SettingsView() {
         {/* Business Summary Stats */}
         <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
           <h2 className="font-black text-slate-800 mb-5 text-xs uppercase tracking-widest">{t('आजचा व्यवसाय', "Business Summary")}</h2>
-          <div className="space-y-2">
+          <div className="space-y-2 mb-6">
             {[
               { label: t('एकूण टेबल', 'Total Tables'), value: totalTables, color: 'text-slate-800', bg: 'bg-slate-50' },
               { label: t('सक्रिय', 'Active'), value: tables.filter(tb => tb.status === 'active').length, color: 'text-sky-500', bg: 'bg-sky-50' },
@@ -124,8 +137,26 @@ export default function SettingsView() {
             ))}
             
             <div className="flex justify-between items-center p-6 mt-4 bg-slate-900 rounded-[1.5rem] shadow-2xl shadow-slate-900/20">
-              <span className="text-slate-400 font-black text-[10px] uppercase tracking-widest">{t('आजची एकूण कमाई', "Total Revenue")}</span>
+              <span className="text-slate-400 font-black text-[10px] uppercase tracking-widest">{t('आजची एकूण कमाई', "Today's Revenue")}</span>
               <span className="font-black text-white text-2xl tracking-tighter">₹{totalRevenue}</span>
+            </div>
+          </div>
+
+          {/* Revenue History List */}
+          <div className="border-t border-slate-50 pt-6">
+            <h3 className="font-black text-slate-800 mb-4 text-[10px] uppercase tracking-[0.2em]">{t('मागील ७ दिवसांची कमाई', 'Last 7 Days History')}</h3>
+            <div className="space-y-2">
+              {last7Days.map(date => (
+                <div key={date} className="flex justify-between items-center py-3 px-4 bg-slate-50 rounded-xl">
+                  <span className="text-[11px] font-black text-slate-500">
+                    {date === today ? t('आज', 'Today') : new Date(date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                  </span>
+                  <span className="font-black text-slate-800 text-sm">₹{historyByDate[date]}</span>
+                </div>
+              ))}
+              {last7Days.length === 0 && (
+                <p className="text-[10px] text-slate-400 font-bold text-center py-4 uppercase tracking-widest">{t('अद्याप कोणताही इतिहास नाही', 'No history yet')}</p>
+              )}
             </div>
           </div>
         </div>

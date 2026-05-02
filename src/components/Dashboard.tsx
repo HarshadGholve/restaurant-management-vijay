@@ -9,6 +9,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   const { t, lang, toggleLang } = useLang();
   const { tables, history, activeOrdersCount, getTableTotal } = useOrders();
 
+  // Using UTC-based reset (resets around 5:30 AM local time)
   const today = new Date().toISOString().split('T')[0];
 
   // Current revenue from tables that are currently billed but not yet cleared
