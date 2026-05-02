@@ -11,17 +11,17 @@ export default function TablesView({ onNavigate }: TablesViewProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-[var(--color-sky-blue-2)] shadow-[0_0_10px_var(--color-sky-blue-2)]';
-      case 'billed': return 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.4)]';
+      case 'active': return 'bg-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.4)]';
+      case 'billed': return 'bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.4)]';
       default: return 'bg-slate-200';
     }
   };
 
   const getStatusBg = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-white border-[var(--color-sky-blue-2)] shadow-[0_4px_20px_rgba(131,201,244,0.15)] ring-1 ring-[var(--color-sky-blue-2)]/50';
-      case 'billed': return 'bg-emerald-50 border-emerald-300 shadow-sm';
-      default: return 'bg-white border-slate-100 shadow-[0_4px_15px_rgba(0,0,0,0.02)]';
+      case 'active': return 'bg-white border-sky-100 shadow-[0_4px_20px_rgba(56,189,248,0.08)]';
+      case 'billed': return 'bg-emerald-50/50 border-emerald-100 shadow-sm';
+      default: return 'bg-white border-slate-100 shadow-sm';
     }
   };
 
@@ -43,57 +43,63 @@ export default function TablesView({ onNavigate }: TablesViewProps) {
 
   return (
     <div className="flex flex-col h-full bg-[#f8fafc]">
-      <div className="bg-white/80 backdrop-blur-md px-5 pt-12 pb-4 border-b border-slate-100 sticky top-0 z-10">
-        <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">{t('टेबल व्यवस्थापन', 'Table Management')}</h1>
-        <p className="text-sm text-slate-500 mt-1 font-medium">
-          {tables.filter(t => t.status === 'active').length} {t('सक्रिय', 'active')} •{' '}
-          {tables.filter(t => t.status === 'cleared').length} {t('रिकामे', 'free')}
-        </p>
+      {/* Synchronized Header */}
+      <div className="bg-white/80 backdrop-blur-md px-6 pt-12 pb-5 border-b border-slate-100 sticky top-0 z-20">
+        <h1 className="text-2xl font-black text-slate-800 tracking-tight">{t('टेबल व्यवस्थापन', 'Table Management')}</h1>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            {tables.filter(t => t.status === 'active').length} {t('सक्रिय', 'active')} •{' '}
+            {tables.filter(t => t.status === 'cleared' || t.status === 'cleared').length} {t('रिकामे', 'free')}
+          </p>
+        </div>
       </div>
 
       {/* Legend */}
-      <div className="flex gap-5 px-5 py-3 bg-white/50 backdrop-blur-sm border-b border-slate-50">
+      <div className="flex gap-4 px-6 py-3 bg-white/40 backdrop-blur-sm border-b border-slate-50 overflow-x-auto no-scrollbar">
         {[
           { color: 'bg-slate-200', label: t('रिकामे', 'Free') },
-          { color: 'bg-[var(--color-sky-blue-2)]', label: t('सक्रिय', 'Active') },
+          { color: 'bg-sky-400', label: t('सक्रिय', 'Active') },
           { color: 'bg-emerald-400', label: t('बिल झाले', 'Billed') },
         ].map(item => (
-          <div key={item.label} className="flex items-center gap-2">
-            <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">{item.label}</span>
+          <div key={item.label} className="flex items-center gap-2 flex-shrink-0">
+            <div className={`w-2 h-2 rounded-full ${item.color}`} />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{item.label}</span>
           </div>
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5 pb-24">
-        <div className="grid grid-cols-3 gap-3">
+      <div className="flex-1 overflow-y-auto p-6 pb-24">
+        <div className="grid grid-cols-3 gap-4">
           {tables.map(table => (
             <button
               key={table.tableId}
               onClick={() => onNavigate(`table-${table.tableId}`)}
-              className={`rounded-2xl p-4 border flex flex-col items-center gap-2 active:scale-[0.98] transition-all duration-300 ${getStatusBg(table.status)} hover:-translate-y-1`}
+              className={`relative rounded-3xl p-4 border flex flex-col items-center gap-2 active:scale-95 transition-all duration-300 ${getStatusBg(table.status)} hover:shadow-md`}
             >
               <div className="relative">
-                <div className="w-14 h-14 bg-white rounded-[14px] shadow-sm flex items-center justify-center border border-slate-100">
-                  <span className="text-xl font-extrabold text-slate-700">{table.tableId}</span>
+                <div className={`w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center border ${table.status !== 'cleared' ? 'border-transparent' : 'border-slate-100'}`}>
+                  <span className={`text-xl font-black ${table.status !== 'cleared' ? 'text-slate-800' : 'text-slate-400'}`}>{table.tableId}</span>
                 </div>
-                <div className={`absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full border-2 border-white ${getStatusColor(table.status)}`} />
+                <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getStatusColor(table.status)}`} />
                 {table.status !== 'cleared' && (
-                  <div className="absolute -bottom-1 -right-1 bg-white border border-slate-100 px-1.5 py-0.5 rounded-md shadow-sm">
-                    <p className="text-[8px] font-black text-slate-500 whitespace-nowrap">{getElapsedTime(table.startTime)}</p>
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-2 py-0.5 rounded-full shadow-lg">
+                    <p className="text-[7px] font-black whitespace-nowrap uppercase tracking-tighter">{getElapsedTime(table.startTime)}</p>
                   </div>
                 )}
               </div>
-              <div className="text-center w-full mt-1">
-                <p className="text-xs font-bold text-slate-800 tracking-wide uppercase">{t(`टेबल`, 'Table')} {table.tableId}</p>
-                <p className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${table.status === 'active' ? 'text-[var(--color-sky-blue-2)]' : table.status === 'billed' ? 'text-emerald-500' : 'text-slate-400'}`}>
+              <div className="text-center w-full mt-2">
+                <p className={`text-[9px] font-black uppercase tracking-widest ${table.status === 'active' ? 'text-sky-500' : table.status === 'billed' ? 'text-emerald-500' : 'text-slate-300'}`}>
                   {getStatusText(table.status)}
                 </p>
                 {table.status !== 'cleared' && (
-                  <p className="text-sm font-extrabold text-slate-800 mt-1.5">₹{getTableTotal(table.tableId)}</p>
+                  <p className="text-sm font-black text-slate-800 mt-1">₹{getTableTotal(table.tableId)}</p>
                 )}
                 {table.status === 'active' && (
-                  <p className="text-[10px] text-slate-500 font-medium mt-0.5 bg-slate-50 rounded-md py-0.5 mx-1">{(table.items || []).length} {t('पदार्थ', 'items')}</p>
+                  <div className="mt-1 flex items-center justify-center gap-1">
+                     <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                     <p className="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">{(table.items || []).length} {t('पदार्थ', 'items')}</p>
+                  </div>
                 )}
               </div>
             </button>

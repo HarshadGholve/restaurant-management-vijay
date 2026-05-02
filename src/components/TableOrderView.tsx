@@ -414,7 +414,7 @@ export default function TableOrderView({ tableId, onNavigate }: TableOrderViewPr
 
       {/* Variant Modal */}
       {showVariantModal && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-end z-50 transition-opacity" onClick={() => setShowVariantModal(null)}>
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-end z-[100] transition-opacity" onClick={() => setShowVariantModal(null)}>
           <div className="bg-white rounded-t-[2rem] w-full p-6 pb-safe animate-slideUp" onClick={e => e.stopPropagation()}>
             <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
             <h3 className="font-extrabold text-slate-800 text-xl mb-1">{t(showVariantModal.nameMarathi, showVariantModal.nameEnglish)}</h3>
@@ -454,7 +454,7 @@ export default function TableOrderView({ tableId, onNavigate }: TableOrderViewPr
 
       {/* Bill Modal */}
       {showBillModal && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-5">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] p-5">
           <div className="bg-white rounded-[2rem] w-full max-w-sm max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-fadeIn">
             <div className="overflow-y-auto p-6 pb-2">
               <div className="text-center border-b-2 border-dashed border-slate-200 pb-5 mb-5">

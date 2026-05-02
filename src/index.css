@@ -11,18 +11,24 @@
 * {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+html, body {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
   overflow: hidden;
-  background: #f8fafc;
+  background: #f1f5f9;
+  height: 100%;
+  width: 100%;
+  position: fixed; /* Prevents bounce scroll on iOS */
 }
 
-html {
-  scroll-behavior: smooth;
+#root {
+  height: 100%;
+  width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -36,10 +42,12 @@ html {
 
 button {
   transition: transform 0.1s ease, opacity 0.1s ease;
+  user-select: none;
 }
 
 button:active {
   transform: scale(0.97);
+  opacity: 0.8;
 }
 
 input:focus, textarea:focus {
@@ -56,10 +64,10 @@ input:focus, textarea:focus {
   to { opacity: 1; }
 }
 
-.slide-up {
-  animation: slideUp 0.3s ease;
+.animate-slideUp {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.fade-in {
-  animation: fadeIn 0.2s ease;
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
 }

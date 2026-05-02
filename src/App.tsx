@@ -31,7 +31,7 @@ function AppContent() {
 
   if (!isLoggedIn) {
     return (
-      <div className="flex flex-col h-screen bg-[#f8fafc] max-w-sm mx-auto relative overflow-hidden" style={{ maxHeight: '100dvh' }}>
+      <div className="flex flex-col h-[100dvh] w-full bg-slate-900 max-w-md mx-auto relative overflow-hidden shadow-2xl">
         <LoginView onLogin={handleLogin} />
       </div>
     );
@@ -40,9 +40,9 @@ function AppContent() {
   const renderPage = () => {
     if (isLoading) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
-          <div className="w-12 h-12 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mb-4" />
-          <p className="text-slate-500 font-medium">Syncing data...</p>
+        <div className="flex flex-col items-center justify-center h-full p-8 bg-white">
+          <div className="w-12 h-12 border-4 border-slate-100 border-t-slate-800 rounded-full animate-spin mb-4" />
+          <p className="text-slate-500 font-bold tracking-tight text-sm uppercase">{t('माहिती लोड होत आहे...', 'Syncing Data...')}</p>
         </div>
       );
     }
@@ -59,13 +59,13 @@ function AppContent() {
     return <Dashboard onNavigate={navigate} />;
   };
 
-  return (
-    <div className="flex flex-col h-screen bg-[#f8fafc] max-w-sm mx-auto relative overflow-hidden" style={{ maxHeight: '100dvh' }}>
-      {/* Phone frame shadow for desktop */}
-      <div className="absolute inset-0 shadow-[0_0_40px_rgba(131,201,244,0.15)] rounded-none sm:rounded-[2.5rem] pointer-events-none z-50 border-0 sm:border-8 border-white/50" />
+  // Helper to get translated sync text
+  const t = (mr: string, en: string) => (localStorage.getItem('lang') === 'mr' ? mr : en);
 
-      {/* Content */}
-      <div className="flex-1 relative flex flex-col overflow-hidden bg-[#f8fafc]">
+  return (
+    <div className="flex flex-col h-[100dvh] w-full bg-white max-w-md mx-auto relative overflow-hidden shadow-2xl sm:rounded-[3rem] sm:my-4 sm:h-[calc(100dvh-2rem)] border-0 sm:border-8 border-white/50">
+      {/* Content Area */}
+      <div className="flex-1 relative flex flex-col overflow-hidden">
         {renderPage()}
       </div>
 
@@ -79,7 +79,7 @@ export default function App() {
   return (
     <LanguageProvider>
       <OrderProvider>
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-0 sm:p-4">
+        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-0 overflow-hidden">
           <AppContent />
         </div>
       </OrderProvider>
