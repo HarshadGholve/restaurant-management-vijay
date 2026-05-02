@@ -98,7 +98,7 @@ export default function TablesView({ onNavigate }: TablesViewProps) {
                 {table.status === 'active' && (
                   <div className="mt-1 flex items-center justify-center gap-1">
                      <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                     <p className="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">{(table.items || []).length} {t('पदार्थ', 'items')}</p>
+                     <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{(table.items || []).length}{t('पदार्थ', (table.items || []).length === 1 ? ' item' : ' items')}</p>
                   </div>
                 )}
               </div>

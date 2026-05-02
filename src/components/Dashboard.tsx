@@ -150,7 +150,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                         {t(`टेबल ${tb.tableId}`, `Table ${tb.tableId}`)}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                        {(tb.items || []).length} {t('पदार्थ', 'items')} • {tb.guestCount} {t('अतिथी', 'guests')}
+                        {(tb.items || []).length}{t('पदार्थ', (tb.items || []).length === 1 ? ' item' : ' items')} • {tb.guestCount} {t('अतिथी', 'guests')}
                       </p>
                     </div>
                   </div>

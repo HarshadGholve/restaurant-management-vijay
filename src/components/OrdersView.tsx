@@ -155,7 +155,13 @@ export default function OrdersView({ onNavigate }: OrdersViewProps) {
                     </div>
                     <div className="text-left">
                       <p className="font-black text-slate-700 text-sm">{t(`टेबल ${order.tableId}`, `Table ${order.tableId}`)}</p>
-                      <p className="text-[9px] text-slate-400 font-black uppercase tracking-tighter">{formatTime(order.archivedAt)} • {(order.items || []).length} {t('पदार्थ', 'items')}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-tighter">{formatTime(order.archivedAt)}</p>
+                        <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
+                        <p className="text-[9px] text-slate-800 font-black uppercase tracking-wide bg-slate-100 px-1.5 py-0.5 rounded-md">
+                          {(order.items || []).length}{t('पदार्थ', (order.items || []).length === 1 ? ' item' : ' items')}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <p className="font-black text-slate-800 text-sm">₹{order.total}</p>
@@ -188,7 +194,7 @@ export default function OrdersView({ onNavigate }: OrdersViewProps) {
               <div>
                 <h3 className="text-xl font-black text-slate-900">{t('ऑर्डर तपशील', 'Order Details')}</h3>
                 <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1.5">
-                  {t('टेबल', 'Table')} {selectedHistoryOrder.tableId} • {formatTime(selectedHistoryOrder.archivedAt)}
+                  {t('टेबल', 'Table')} {selectedHistoryOrder.tableId} • {formatTime(selectedHistoryOrder.archivedAt)} • {(selectedHistoryOrder.items || []).length}{t('पदार्थ', (selectedHistoryOrder.items || []).length === 1 ? ' item' : ' items')}
                 </p>
               </div>
               <button 
