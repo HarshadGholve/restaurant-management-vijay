@@ -13,8 +13,10 @@ export default function SettingsView() {
     .filter(tb => tb.status === 'billed')
     .reduce((sum, tb) => sum + getTableTotal(tb.tableId), 0);
 
-  const archivedRevenue = (history || [])
-    .filter(order => order.archivedAt && order.archivedAt.startsWith(today))
+  const todayHistory = (history || [])
+    .filter(order => order.archivedAt && order.archivedAt.startsWith(today));
+
+  const archivedRevenue = todayHistory
     .reduce((sum, order) => sum + (order.total || 0), 0);
 
   const totalRevenue = currentBilledRevenue + archivedRevenue;
