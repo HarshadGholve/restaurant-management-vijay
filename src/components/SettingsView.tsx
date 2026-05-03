@@ -29,6 +29,9 @@ export default function SettingsView() {
     return acc;
   }, {} as Record<string, number>);
 
+  // Add currently billed revenue to today's history entry so they match
+  historyByDate[today] = (historyByDate[today] || 0) + currentBilledRevenue;
+
   const last7Days = Object.keys(historyByDate)
     .sort()
     .reverse()
