@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLang } from '../context/LanguageContext';
 import { useOrders } from '../context/OrderContext';
-import { menuItems, categories, MenuItem } from '../data/menuData';
+import { useMenu } from '../context/MenuContext';
+import { MenuItem } from '../data/menuData';
 
 interface TableOrderViewProps {
   tableId: number;
@@ -11,6 +12,7 @@ interface TableOrderViewProps {
 export default function TableOrderView({ tableId, onNavigate }: TableOrderViewProps) {
   const { t } = useLang();
   const { tables, addItemToTable, updateQuantity, removeItemFromTable, getTableTotal, setGuestCount, setNotes, billTable, clearTable } = useOrders();
+  const { menuItems, categories } = useMenu();
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeTab, setActiveTab] = useState<'order' | 'cart'>('order');
   const [search, setSearch] = useState('');

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { OrderProvider, useOrders } from './context/OrderContext';
+import { MenuProvider } from './context/MenuContext';
 import Dashboard from './components/Dashboard';
 import TablesView from './components/TablesView';
 import TableOrderView from './components/TableOrderView';
@@ -79,9 +80,11 @@ export default function App() {
   return (
     <LanguageProvider>
       <OrderProvider>
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-0 overflow-hidden">
-          <AppContent />
-        </div>
+        <MenuProvider>
+          <div className="min-h-screen bg-slate-100 flex items-center justify-center p-0 overflow-hidden">
+            <AppContent />
+          </div>
+        </MenuProvider>
       </OrderProvider>
     </LanguageProvider>
   );
