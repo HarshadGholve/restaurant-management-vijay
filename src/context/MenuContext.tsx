@@ -31,37 +31,51 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     const itemsRef = ref(db, MENU_ITEMS_PATH);
     const catsRef = ref(db, MENU_CATS_PATH);
 
-    const unsubItems = onValue(itemsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const arr: MenuItem[] = Object.values(data);
-        // Sort veg first, then by original order (preserved via id)
-        setMenuItems(arr);
-      } else {
-        // Seed from static data on first run
-        const seed: Record<string, MenuItem> = {};
-        defaultMenuItems.forEach((item) => {
-          seed[item.id] = item;
-        });
-        set(itemsRef, seed);
+    const unsubItems = onValue(
+      itemsRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const arr: MenuItem[] = Object.values(data);
+          // Sort veg first, then by original order (preserved via id)
+          setMenuItems(arr);
+        } else {
+          // Seed from static data on first run
+          const seed: Record<string, MenuItem> = {};
+          defaultMenuItems.forEach((item) => {
+            seed[item.id] = item;
+          });
+          set(itemsRef, seed);
+        }
+      },
+      (error) => {
+        console.error("Firebase menu items read failed:", error);
+        setIsMenuLoading(false);
       }
-    });
+    );
 
-    const unsubCats = onValue(catsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const arr: MenuCategory[] = Object.values(data);
-        setCategories(arr);
-      } else {
-        // Seed categories
-        const seed: Record<string, MenuCategory> = {};
-        defaultCategories.forEach((cat) => {
-          seed[cat.id] = cat;
-        });
-        set(catsRef, seed);
+    const unsubCats = onValue(
+      catsRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const arr: MenuCategory[] = Object.values(data);
+          setCategories(arr);
+        } else {
+          // Seed categories
+          const seed: Record<string, MenuCategory> = {};
+          defaultCategories.forEach((cat) => {
+            seed[cat.id] = cat;
+          });
+          set(catsRef, seed);
+        }
+        setIsMenuLoading(false);
+      },
+      (error) => {
+        console.error("Firebase menu categories read failed:", error);
+        setIsMenuLoading(false);
       }
-      setIsMenuLoading(false);
-    });
+    );
 
     return () => {
       unsubItems();

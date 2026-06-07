@@ -67,44 +67,58 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     const tablesRef = ref(db, DB_PATH);
     const historyRef = ref(db, HISTORY_PATH);
 
-    const unsubTables = onValue(tablesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const tablesArray: TableOrder[] = Object.values(data);
-        tablesArray.sort((a, b) => a.tableId - b.tableId);
-        setTables(tablesArray);
-        if (tablesArray.length > 0 && tablesArray.length !== totalTables) {
-          setTotalTables(tablesArray.length);
+    const unsubTables = onValue(
+      tablesRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const tablesArray: TableOrder[] = Object.values(data);
+          tablesArray.sort((a, b) => a.tableId - b.tableId);
+          setTables(tablesArray);
+          if (tablesArray.length > 0 && tablesArray.length !== totalTables) {
+            setTotalTables(tablesArray.length);
+          }
+        } else {
+          const initialTables: Record<string, TableOrder> = {};
+          for (let i = 1; i <= DEFAULT_TOTAL_TABLES; i++) {
+            initialTables[`table-${i}`] = {
+              tableId: i,
+              items: [],
+              status: 'cleared',
+              startTime: new Date().toISOString(),
+              guestCount: 1,
+              notes: '',
+            };
+          }
+          set(tablesRef, initialTables);
         }
-      } else {
-        const initialTables: Record<string, TableOrder> = {};
-        for (let i = 1; i <= DEFAULT_TOTAL_TABLES; i++) {
-          initialTables[`table-${i}`] = {
-            tableId: i,
-            items: [],
-            status: 'cleared',
-            startTime: new Date().toISOString(),
-            guestCount: 1,
-            notes: '',
-          };
-        }
-        set(tablesRef, initialTables);
+      },
+      (error) => {
+        console.error("Firebase tables read failed:", error);
+        setIsLoading(false);
       }
-    });
+    );
 
-    const unsubHistory = onValue(historyRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const historyArray: ArchivedOrder[] = Object.entries(data).map(([id, val]) => ({
-          ...(val as any),
-          id
-        }));
-        // Sort by archivedAt descending
-        historyArray.sort((a, b) => new Date(b.archivedAt).getTime() - new Date(a.archivedAt).getTime());
-        setHistory(historyArray);
+    const unsubHistory = onValue(
+      historyRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const historyArray: ArchivedOrder[] = Object.entries(data).map(([id, val]) => ({
+            ...(val as any),
+            id
+          }));
+          // Sort by archivedAt descending
+          historyArray.sort((a, b) => new Date(b.archivedAt).getTime() - new Date(a.archivedAt).getTime());
+          setHistory(historyArray);
+        }
+        setIsLoading(false);
+      },
+      (error) => {
+        console.error("Firebase history read failed:", error);
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    });
+    );
 
     return () => {
       unsubTables();
